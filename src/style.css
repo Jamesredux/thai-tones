@@ -83,3 +83,19 @@ h1 {
   border: 1px solid black;
   margin: 10px;
 }
+
+.symbol-card {
+  font-size: 7rem;
+}
+
+.buttons {
+  display: flex;
+}
+
+.button {
+  width: 100px;
+  height: 40px;
+  margin: 5px;
+  border: 2px solid seagreen;
+  border-radius: 4px;
+}
