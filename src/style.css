@@ -113,10 +113,26 @@ h1 {
 .game-data {
   display: flex;
   flex-direction: column;
-  font-size: 1.5rem;
+  /* font-size: 1.5rem; */
   padding: 20px;
 }
 
+.game-data > * {
+  margin: 5px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form > * {
+  margin-bottom: 5px;
+}
+
+.score {
+  font-size: 1.5rem;
+}
 .restart {
   margin: 10px;
   height: 40px;

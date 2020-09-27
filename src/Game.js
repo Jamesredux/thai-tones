@@ -1,6 +1,7 @@
 import React from 'react';
 import { Data } from './Data';
 import Buttons from './Buttons';
+import Controls from './Controls';
 
 class Game extends React.Component {
   constructor() {
@@ -8,13 +9,28 @@ class Game extends React.Component {
     this.state = {
       index: 0,
       score: 0,
-      total: Data.length - 1,
+      selectedChars: this.setUpData(Data, []),
       gameOver: false,
-      shuffleData: this.shuffleArray(Data),
     };
     this.nextCard = this.nextCard.bind(this);
     this.endGame = this.endGame.bind(this);
     this.reStart = this.reStart.bind(this);
+  }
+
+  excludeClass(value, classes) {
+    if (classes.includes(value.class)) {
+      return;
+    } else {
+      return value;
+    }
+  }
+
+  setUpData(array, classes) {
+    const newArray = this.shuffleArray(array);
+    const filteredArray = newArray.filter((char) =>
+      this.excludeClass(char, classes)
+    );
+    return filteredArray;
   }
 
   shuffleArray(array) {
@@ -29,26 +45,27 @@ class Game extends React.Component {
   }
 
   nextCard(result) {
-    console.log(this.state.index);
-    console.log('total');
-    console.log(this.state.total);
-    if (this.state.index >= this.state.total) {
-      this.endGame();
+    if (this.state.index >= this.state.selectedChars.length - 1) {
+      this.endGame(result);
     } else {
       this.updateGame(result);
     }
   }
 
-  endGame() {
+  endGame(result) {
+    if (result) {
+      this.setState((prevState) => {
+        return { index: prevState.index + 1, score: prevState.score + 1 };
+      });
+    }
     this.setState({ gameOver: true });
-    console.log('GAME OVER');
   }
 
-  reStart() {
+  reStart(classes) {
     this.setState({
       index: 0,
       score: 0,
-      total: this.state.shuffleData.length - 1,
+      selectedChars: this.setUpData(Data, classes),
       gameOver: false,
     });
   }
@@ -67,8 +84,8 @@ class Game extends React.Component {
 
   render() {
     const thisIndex = this.state.index;
-    const cardList = this.state.shuffleData;
-    console.log(cardList);
+    const cardList = this.state.selectedChars;
+
     let display;
     if (this.state.gameOver !== true) {
       display = (
@@ -95,18 +112,13 @@ class Game extends React.Component {
     return (
       <div className='game-container'>
         {display}
-        <div className='game-data'>
-          <div>
-            <p>
-              Score: {this.state.score} / {this.state.total + 1}
-            </p>
-          </div>
-          {this.state.gameOver ? (
-            <div className='restart' onClick={this.reStart}>
-              Restart?
-            </div>
-          ) : null}
-        </div>
+
+        <Controls
+          score={this.state.score}
+          gameState={this.state.gameOver}
+          total={this.state.selectedChars.length - 1}
+          reStart={this.reStart}
+        />
       </div>
     );
   }
